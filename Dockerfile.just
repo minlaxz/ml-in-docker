@@ -1,0 +1,14 @@
+FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
+LABEL maintainer="Min Latt <minminlaxz@gmail.com>"
+WORKDIR /root/
+RUN apt update && apt upgrade -y && apt install --no-install-recommends -y \
+net-tools curl netcat build-essential vim locate pv tree && cd /root/ \
+&& curl -fsSL https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o conda.sh \
+&& chmod a+x conda.sh && ./conda.sh && conda config --set auto_activate_base true && source .bashrc \
+&& curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/laxz.bashrc -o /etc/laxz.bashrc \
+&& curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/dklaxz -o /usr/bin/dklaxz \
+&& rm -rf /var/lib/apt/lists/* && rm -f /root/conda.sh
+CMD ["bash" "-c" "source /etc/laxz.bashrc \
+&& jupyter notebook --notebook-dir=/notebooks --ip 0.0.0.0 --no-browser --allow-root"]
+
+# minlaxz/just3.6.9:10.1-v7.6.5-18.04-devel
