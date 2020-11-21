@@ -1,8 +1,0 @@
-FROM minlaxz/just3.6.9:10.1-v7.6.5-18.04-devel
-LABEL maintainer="Min Latt <minminlaxz@gmail.com>"
-WORKDIR /root/
-RUN apt update && apt upgrade -y \
-&& conda install numpy tensorflow-gpu jupyter \
-&& rm -rf /var/lib/apt/lists/* && conda clean -a \
-CMD ["bash" "-c" "source /etc/laxz.bashrc \
-&& jupyter notebook --notebook-dir=/notebooks --ip 0.0.0.0 --no-browser --allow-root"]

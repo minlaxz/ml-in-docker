@@ -33,6 +33,27 @@ EXPL
 fi
 
 cd $HOME
+
+_check_internet(){
+wget -q --spider http://google.com
+if [ $? -eq 0 ]; then
+_update
+else
+cat<<EOF
+Internet is Offline.
+please consider it to auto check dklaxz update.
+or manually update => dklaxz --update
+Can't update dklaxz.
+EOF
+fi
+}
+
+_update(){
+  sha1sum -c /root/dklaxz-sum
+}
+
+_check_internet
+
 echo "You can type 'dklaxz --help' for info."
 
 # Turn off colors

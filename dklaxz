@@ -1,5 +1,5 @@
 #!/bin/bash
-version='0.1.1' # -- [main OFF/major ON/minor ON]
+version='0.2.0' # -- [main OFF/major ON/minor ON]
 OPENCV_VERSION='4.5.0'
 
 laxzhelp() {
@@ -10,6 +10,8 @@ cat<<EOF
     --build NUMBER  this will build opencv 4.5.0 from source.
     --cvhelp        docker and opencv help for sharing x server.
     --version       dklaxz's version.
+    --update        update dklaxz.
+    --update-rc     update laxz.bashrc.
 EOF
     echo -e "\e[m"
 }
@@ -87,14 +89,14 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
 -D ENABLE_FAST_MATH=1 \
 -D CUDA_FAST_MATH=1 \
 -D WITH_CUBLAS=1 \
--D CUDA_ARCH_BIN=5.3 \
+-D CUDA_ARCH_BIN=${compute_cab} \
 -D INSTALL_PYTHON_EXAMPLES=ON \
 -D INSTALL_C_EXAMPLES=OFF \
 -D OPENCV_ENABLE_NONFREE=ON \
 -D HAVE_opencv_python3=ON \
 -D PYTHON_EXECUTABLE=$(which python) \
 -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
--D BUILD_EXAMPLES=ON .. && make -j8
+-D BUILD_EXAMPLES=ON .. && make -j4
 
     echo -e "\e[7;34m"
 echo "Installation started. This will take several minutes."
@@ -134,6 +136,17 @@ EOF
     echo -e "\e[m"
 }
 
+dklaxzupdate() {
+    curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/dklaxz -o /usr/bin/dklaxz
+    echo "dlaxz updated."
+}
+
+rcupdate(){
+    curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/laxz.bashrc -o /etc/laxz.bashrc
+    source /etc/laxz.bashrc
+    echo "bashrc updated."
+}
+
 if [ $# -eq 0 ]; then
 echo -e "\e[1;31m"
     printf "[not an option] dklaxz --help    for usage.\n"
@@ -153,6 +166,8 @@ else
             ;;
         --cvhelp) laxzopencv ;;
         --version) printf "version : ${version} Main:Major:Minor\n" ;;
+        --update) dklaxzupdate ;;
+        --update-rc) rcupdate ;;
         *) printf "[not an option $stVar] dklaxz --help    for usage.\n" ;;
     esac
 fi
