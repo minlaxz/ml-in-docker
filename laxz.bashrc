@@ -35,26 +35,35 @@ fi
 cd $HOME
 
 _check_internet(){
-wget -q --spider http://google.com
+wget -q --spider google.com
 if [ $? -eq 0 ]; then
-_update
+_check_update
 else
 cat<<EOF
-Internet is Offline.
-please consider it to auto check dklaxz update.
-or manually update => dklaxz --update
-Can't update dklaxz.
+seem to be Offline ...
+ps consider manually update => dklaxz --update
 EOF
 fi
 }
 
-_update(){
-  sha1sum -c /root/dklaxz-sum
+_check_update(){
+  curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/dklaxz -o /dklaxz
+  DKHASH=$(sha1sum /usr/bin/dlaxz | cut -c 1-40)
+  DKTMPHASH=$(sha1sum /dklaxz | cut -c 1-40)
+  if [[ "$DKHASH" == "$DKTMPHASH" ]]; then
+  echo "dklaxz up-to-date."
+  rm /dklaxz
+  else 
+  mv /dklaxz /usr/bin/dklaxz
+  echo "dklaxz is updated."
+  fi
+
+#sha256sum -c SHA256SUMS 2>&1 | grep OK
 }
 
 _check_internet
 
-echo "You can type 'dklaxz --help' for info."
+echo "You can type 'dklaxz --help' for more."
 
 # Turn off colors
 echo -e "\e[m"

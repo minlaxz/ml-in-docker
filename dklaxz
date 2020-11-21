@@ -142,9 +142,9 @@ dklaxzupdate() {
 }
 
 rcupdate(){
-    curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/laxz.bashrc -o /etc/laxz.bashrc
-    source /etc/laxz.bashrc
-    echo "bashrc updated."
+    curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/laxz.bashrc -o /etc/bash.bashrc
+    chmod a+rwx /etc/bash.bashrc
+    echo "bash.bashrc updated."
 }
 
 if [ $# -eq 0 ]; then
