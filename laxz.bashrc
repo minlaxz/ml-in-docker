@@ -48,7 +48,7 @@ fi
 
 _check_update(){
   curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/dklaxz>/dklaxz
-  DKHASH=$(sha1sum /usr/bin/dlaxz | cut -c 1-40)
+  DKHASH=$(sha1sum /usr/bin/dklaxz | cut -c 1-40)
   DKTMPHASH=$(sha1sum /dklaxz | cut -c 1-40)
   if [[ "$DKHASH" == "$DKTMPHASH" ]]; then
   echo "dklaxz up-to-date."
