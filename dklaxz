@@ -138,7 +138,7 @@ EOF
 
 dklaxzupdate() {
     curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/dklaxz>/usr/bin/dklaxz
-    echo "dlaxz updated."
+    echo "dklaxz updated."
 }
 
 rcupdate(){
