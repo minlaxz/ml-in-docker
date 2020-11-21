@@ -47,7 +47,7 @@ fi
 }
 
 _check_update(){
-  curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/dklaxz -o /dklaxz
+  curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/dklaxz>/dklaxz
   DKHASH=$(sha1sum /usr/bin/dlaxz | cut -c 1-40)
   DKTMPHASH=$(sha1sum /dklaxz | cut -c 1-40)
   if [[ "$DKHASH" == "$DKTMPHASH" ]]; then

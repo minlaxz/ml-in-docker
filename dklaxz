@@ -137,12 +137,12 @@ EOF
 }
 
 dklaxzupdate() {
-    curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/dklaxz -o /usr/bin/dklaxz
+    curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/dklaxz>/usr/bin/dklaxz
     echo "dlaxz updated."
 }
 
 rcupdate(){
-    curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/laxz.bashrc -o /etc/bash.bashrc
+    curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/laxz.bashrc>/etc/bash.bashrc
     chmod a+rwx /etc/bash.bashrc
     echo "bash.bashrc updated."
 }
