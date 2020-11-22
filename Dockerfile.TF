@@ -140,9 +140,11 @@ RUN mkdir /bazel && \
 # minlaxz scripts
 COPY laxz.bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
-RUN mkdir -p /usr/local/dklaxz/
-COPY dklaxz-extra dklaxz /usr/local/dklaxz/
-RUN chmod 755 /usr/local/dklaxz/*
+
+RUN mkdir -p /usr/local/dklaxz/dklaxz-extra/
+COPY dklaxz /usr/local/dklaxz/dklaxz
+COPY dklaxz-extra /usr/local/dklaxz/dklaxz-extra/
+RUN chmod 755 /usr/local/dklaxz/dklaxz /usr/local/dklaxz/dklaxz-extra/*
 RUN ln -s /usr/local/dklaxz/dklaxz /usr/bin/dklaxz
 
 RUN python3 -m pip install --no-cache-dir jupyter matplotlib
