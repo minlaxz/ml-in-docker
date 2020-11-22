@@ -7,6 +7,9 @@ export TERM=xterm-256color
 alias grep="grep --color=auto"
 alias ls="ls --color=auto"
 
+DK_PREFIX=/usr/local/dklaxz
+DKTMP_PREFIX=/tmp/dklaxz
+
 echo -e "\e[1;31m"
 cat<<ML
  __  __  ____  _  _  __      __    _  _  ____ 
@@ -37,27 +40,41 @@ cd $HOME
 _check_internet(){
 wget -q --spider google.com
 if [ $? -eq 0 ]; then
-_check_update
+_check_dk_update
 else
 cat<<EOF
 seem to be Offline ...
-ps consider manually update => dklaxz --update
+ps consider manually update later => dklaxz --update
 EOF
 fi
 }
 
-_check_update(){
-  curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/dklaxz>/dklaxz
-  DKHASH=$(sha1sum /usr/bin/dklaxz | cut -c 1-40)
-  DKTMPHASH=$(sha1sum /dklaxz | cut -c 1-40)
-  if [[ "$DKHASH" == "$DKTMPHASH" ]]; then
-  echo "dklaxz up-to-date."
-  rm /dklaxz
-  else 
-  mv /dklaxz /usr/bin/dklaxz
-  echo "dklaxz is updated."
-  fi
+_check_dk_update(){
+  cat<<EOF
+  dklaxz is checking for update, please wait a bit ...
+EOF
+# download or update repo 
+if [[ ! -f "$DKTMP_PREFIX/dklaxz" ]]; then
+rm -rf $DKTMP_PREFIX
+git clone --quiet https://github.com/minlaxz/ml-in-docker.git $DKTMP_PREFIX > /dev/null
+else
+cd $DKTMP_PREFIX
+git pull --quiet origin master > /dev/null
+fi
 
+DKHASH=$(find $DK_PREFIX \( ! -regex '.*/\..*' \) -type f -print0   | xargs -0 sha1sum | sha256sum | awk '{print $1}')
+DKTMPHASH=$(find $DKTMP_PREFIX \( ! -regex '.*/\..*' \) -type f -print0   | xargs -0 sha1sum | sha256sum | awk '{print $1}')
+
+if [[ "$DKHASH" == "$DKTMPHASH" ]]; then
+echo "dklaxz up-to-date."
+else
+cat<<EOF
+dklaxz update available.
+please consider running dklaxz --update
+EOF
+fi
+echo "current hash : $DKHASH"
+echo "lastest hash : $DKTMPHASH"
 #sha256sum -c SHA256SUMS 2>&1 | grep OK
 }
 
