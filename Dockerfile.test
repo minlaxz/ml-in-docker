@@ -1,0 +1,18 @@
+ARG UBUNTU_VERSION=18.04
+
+ARG DK_PREFIX=/usr/local/dklaxz
+ARG DK_EXT_PREFIX=${DK_PREFIX}/dklaxz-extra
+
+FROM ubuntu:${UBUNTU_VERSION}
+
+SHELL ["/bin/bash", "-c"]
+
+RUN apt-get update && apt-get upgrade -y && apt-get install -y wget git && apt-get autoremove -y
+
+COPY laxz.bashrc /etc/bash.bashrc
+RUN chmod a+rwx /etc/bash.bashrc
+
+RUN mkdir -p /usr/local/dklaxz-extra
+COPY dklaxz /usr/bin/dklaxz
+COPY dklaxz-extra /usr/local/dklaxz-extra/
+RUN chmod 755 /usr/bin/dklaxz /usr/local/dklaxz-extra/*
