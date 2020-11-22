@@ -1,0 +1,11 @@
+curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/dklaxz -o /dklaxz
+DKHASH=$(sha256sum /usr/bin/dklaxz | cut -c 1-60)
+DKTMPHASH=$(sha256sum /dklaxz | cut -c 1-60)
+if [[ "$DKHASH"=="$DKTMPHASH" ]]; then
+echo "dklaxz update-to-date."
+rm /dklaxz
+else
+mv /dklaxz /usr/bin/dklaxz
+chmod 755 /usr/bin/dklaxz
+echo "dklaxz is updated."
+fi
