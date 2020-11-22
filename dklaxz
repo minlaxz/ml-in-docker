@@ -1,51 +1,7 @@
 #!/bin/bash
-version='0.2.0' # -- [main OFF/major ON/minor ON]
+version='0.3.1' # -- [main OFF/major ON/minor ON]
 OPENCV_VERSION='4.5.0'
-
-laxzhelp() {
-    echo -e "\e[0;33m"
-cat<<EOF
-    --help          to show this usage message.
-    --map           to show sitemap of this image.
-    --build NUMBER  this will build opencv 4.5.0 from source.
-    --cvhelp        docker and opencv help for sharing x server.
-    --version       dklaxz's version.
-    --update        update dklaxz.
-    --update-rc     update laxz.bashrc.
-EOF
-    echo -e "\e[m"
-}
-
-laxzmap() {
-    echo -e "\e[1;31m"
-cat<<EOF
- ----------------------------------------------------------------------
-|
-|from nvidia/cuda:11.0-cudnn8-devel-ubuntu18.04
-|           |
-|           |
-|        minlaxz/cudan-tf-notebook
-|             |  |     |    |
-|             |  |     |    |____ export jupyter-notebook @ 8888  <<< |
-|             |  |     |                                              |
-|             |  |     |____ tensorrt, build tf-gpu                   |
-|             |  |               |                                    |
-|             |  |               |____ pycuda                         |
-|             |  |                                                    |
-|             |  |____ ready cuda, cudnn from nvidia                  |
-|    __ lxz __|                                                       |
-|   |         |                                                       |
-|   |         |____ python3, python3-dev, python3-pip, numpy          |
-|   |                                                                 |
-|   |__build__ opencv build 4.5.0,                                    |
-|   |__ help__ helpful usage message.                                 |
-|                                                                     |
-|    https://gist.github.com/minlaxz/1a99b4277aee3b82a152f036322d7db8 |
-|
- --------------cuda11.0:cudnn8.0.5.39:tensorrt7.2.1.6:ubuntu18.04 -----
-EOF
-    echo -e "\e[m"
-}
+DK_EXT_PREFIX=/usr/local/dklaxz/dklaxz-extra
 
 laxzbuild() {
     compute_cab=$1
@@ -63,7 +19,7 @@ echo "Finished. "
 echo "Downloading OpenCV archive ... "
     echo -e "\e[m"
 wget -O opencv.zip https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip \
-&& unzip opencv.zip && mv opencv-4.5.0/ opencv/
+&& unzip opencv.zip && mv opencv-${OPENCV_VERSION}/ opencv/
     echo -e "\e[1;37m"
 echo "OpenCV Ready. "
     echo -e "\e[m"
@@ -72,7 +28,7 @@ echo "OpenCV Ready. "
 echo "Downloading OpenCV_contrib archive ... "
     echo -e "\e[m"
 wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip \
-&& unzip opencv_contrib.zip && mv opencv_contrib-4.5.0/ opencv_contrib/
+&& unzip opencv_contrib.zip && mv opencv_contrib-${OPENCV_VERSION}/ opencv_contrib/
     echo -e "\e[1;37m"
 echo "Opencv_contrib Ready. "
     echo -e "\e[m"
@@ -80,7 +36,17 @@ echo "Opencv_contrib Ready. "
     echo -e "\e[7;34m"
 echo "OpenCV build started. This will take several minutes."
     echo -e "\e[m"
-cd opencv && mkdir -p build && cd $_ \
+mkdir -p $HOME/opencv/build && cd $_ \
+
+while true; do
+    read -p "Build opencv? this will take some time [y/n]: " yn
+    case $yn in 
+        [Yy]*) cmakeopnev ;;
+        [Nn]*) exit ;;
+        *) echo "y or n!" ;;
+        esac
+    done
+
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
 -D CMAKE_INSTALL_PREFIX=/usr/local \
 -D WITH_CUDA=ON \
@@ -117,36 +83,6 @@ echo "Finished."
     echo -e "\e[m"
 }
 
-laxzopencv() {
-    echo -e "\e[1;37m"
-cat<<EOF
-    Docker and OpenCV Usage.
-    ------------------------
-    docker run --rm --interactive --tty --gpus all --device /dev/video0:/dev/video0 \
-    --volume $HOME:$HOME --publish 8888:8888 IMAGE /bin/bash #FOR INTERACTIVE ADN REMOVE ON EXIT
-
-
-    docker run --name NAME --detach --tty --gpus all --device /dev/video0:/dev/video0 \
-    --volume $HOME:$HOME --publish 8888:8888 IMAGE
-    docker exec --interactive --tty NAME /bin/bash
-
-    docker run --detach --tty --gpus all --device /dev/video0:/dev/video0 \
-    --volume $HOME:$HOME --publish 8888:8888 IMAGE
-EOF
-    echo -e "\e[m"
-}
-
-dklaxzupdate() {
-    curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/dklaxz>/usr/bin/dklaxz
-    echo "dklaxz updated."
-}
-
-rcupdate(){
-    curl -fsSL https://raw.githubusercontent.com/minlaxz/scripts/master/laxz.bashrc>/etc/bash.bashrc
-    chmod a+rwx /etc/bash.bashrc
-    echo "bash.bashrc updated."
-}
-
 if [ $# -eq 0 ]; then
 echo -e "\e[1;31m"
     printf "[not an option] dklaxz --help    for usage.\n"
@@ -155,19 +91,20 @@ else
     stVar=$1 #major
     ndVar=$2 #minor
 
+    # make sure update with dklaxz-extra/help
     case "$stVar" in
-        --help) laxzhelp ;;
-        --map) laxzmap ;;
+        --help) bash -c $DK_EXT_PREFIX/help ;;
+        --map) bash -c $DK_EXT_PREFIX/map ;;
         --build) if [[ $ndVar == "" ]]; then
             echo "This need GPU(s)'(!s) compute capability number. eg:7.6"
             echo "more info > https://developer.nvidia.com/cuda-gpus"
             else laxzbuild $ndVar
             fi
             ;;
-        --cvhelp) laxzopencv ;;
+        --cvhelp) bash -c $DK_EXT_PREFIX/howto_opencv ;;
         --version) printf "version : ${version} Main:Major:Minor\n" ;;
-        --update) dklaxzupdate ;;
-        --update-rc) rcupdate ;;
-        *) printf "[not an option $stVar] dklaxz --help    for usage.\n" ;;
+        --update) bash -c $DK_EXT_PREFIX/check_dklaxz ;;
+        --update-rc) bash -c $DK_EXT_PREFIX/check_rc ;;
+        *) printf "[not an option $stVar] dklaxz --help for usage.\n" ;;
     esac
 fi
