@@ -12,7 +12,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y wget git && apt-g
 COPY laxz.bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
 
-RUN mkdir -p /usr/local/dklaxz-extra
-COPY dklaxz /usr/bin/dklaxz
-COPY dklaxz-extra /usr/local/dklaxz-extra/
-RUN chmod 755 /usr/bin/dklaxz /usr/local/dklaxz-extra/*
+RUN mkdir -p /usr/local/dklaxz/dklaxz-extra/
+COPY dklaxz /usr/local/dklaxz/dklaxz
+COPY dklaxz-extra /usr/local/dklaxz/dklaxz-extra/
+RUN chmod 755 /usr/local/dklaxz/dklaxz /usr/local/dklaxz/dklaxz-extra/*
+RUN ln -s /usr/local/dklaxz/dklaxz /usr/bin/dklaxz
