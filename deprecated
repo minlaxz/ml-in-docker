@@ -1,0 +1,3 @@
+DKHASH=$(find . -type f \( -exec sha256sum "/usr/local/dklaxz"/{} \; \) | sha256sum)
+DKHASH=$(sha256sum /usr/bin/dklaxz | cut -c 1-60)
+DKTMPHASH=$(sha256sum /dklaxz | cut -c 1-60)
