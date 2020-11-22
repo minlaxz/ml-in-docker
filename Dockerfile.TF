@@ -140,11 +140,10 @@ RUN mkdir /bazel && \
 # minlaxz scripts
 COPY laxz.bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
-COPY dklaxz /usr/bin/dklaxz
-RUN chmod 755 /usr/bin/dklaxz
 RUN mkdir -p /usr/local/dklaxz/
-COPY dklaxz-extra /usr/local/dklaxz/
+COPY dklaxz-extra dklaxz /usr/local/dklaxz/
 RUN chmod 755 /usr/local/dklaxz/*
+RUN ln -s /usr/local/dklaxz/dklaxz /usr/bin/dklaxz
 
 RUN python3 -m pip install --no-cache-dir jupyter matplotlib
 # Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
