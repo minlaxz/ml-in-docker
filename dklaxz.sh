@@ -17,22 +17,22 @@ else
 
     # make sure update with dklaxz-extra/help
     case "$stVar" in
-        --help) bash -c $DK_EXT_PREFIX/help ;;
-        --map) bash -c $DK_EXT_PREFIX/map ;;
+        --help) bash $DK_EXT_PREFIX/help.sh ;;
+        --map) bash $DK_EXT_PREFIX/map.sh ;;
 
         --build-cv) if [[ $ndVar == "" ]]; then
             echo "This need GPU(s)'(!s) compute capability number. eg:7.6"
             echo "more info > https://developer.nvidia.com/cuda-gpus"
-            else bash $DK_EXT_PREFIX/build_opencv $OPENCV_VERSION $ndVar
+            else bash $DK_EXT_PREFIX/build_opencv.sh $OPENCV_VERSION $ndVar
             fi
             ;;
-        --help-cv) bash -c $DK_EXT_PREFIX/howto_opencv ;;
+        --help-cv) bash $DK_EXT_PREFIX/howto_opencv.sh ;;
 
         # --build-tf) if [[ ]]
 
         --version) printf "version : ${version} Main/Build/Minor\n" ;;
-        --update) bash $DK_EXT_PREFIX/check_dklaxz $DK_PREFIX $DKTMP_PREFIX $DK_REPO ;;
-        --update-rc) bash -c $DK_EXT_PREFIX/check_rc ;; # for some weird cases
+        --update) bash $DK_EXT_PREFIX/check_dklaxz.sh $DK_PREFIX $DKTMP_PREFIX $DK_REPO ;;
+        --update-rc) bash $DK_EXT_PREFIX/check_rc.sh ;; # for some weird cases
         *) printf "[not an option $stVar] dklaxz --help for usage.\n" ;;
     esac
 fi
