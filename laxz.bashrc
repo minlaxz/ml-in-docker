@@ -79,7 +79,7 @@ git clone --quiet https://github.com/minlaxz/ml-in-docker.git $DKTMP_PREFIX && c
 # now inside DKTMP_PREFIX
 rm -rf .git Dockerfile.* LICENSE README.md deprecated examples-ipynb.txt laxz.bashrc .gitignore
 # find . -type f -or -type d -not -name 'dklaxz*' -delete
-DKTMPHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0 | xargs -0 sha1sum | sort -h | sha256sum | awk '{print $1}'')
+DKTMPHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0 | xargs -0 sha1sum | sort -h | sha256sum | awk '{print $1}')
 
 if [[ "$DKHASH" == "$DKTMPHASH" ]]; then
 echo -e "\e[1;37m"
