@@ -9,6 +9,7 @@ alias ls="ls --color=auto"
 
 DK_PREFIX=/usr/local/dklaxz
 DKTMP_PREFIX=/tmp/dklaxz
+DK_REPO=https://github.com/minlaxz/ml-in-docker.git
 
 echo -e "\e[1;36m"
 cat<<ML
@@ -75,7 +76,7 @@ echo -e "\e[m"
 # fi
 
 rm -rf $DKTMP_PREFIX || true
-git clone --quiet https://github.com/minlaxz/ml-in-docker.git $DKTMP_PREFIX && cd $_
+git clone --quiet $DK_REPO $DKTMP_PREFIX && cd $_
 # now inside DKTMP_PREFIX
 rm -rf .git Dockerfile.* LICENSE README.md deprecated examples-ipynb.txt laxz.bashrc .gitignore
 # find . -type f -or -type d -not -name 'dklaxz*' -delete
