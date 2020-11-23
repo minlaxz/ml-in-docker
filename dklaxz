@@ -1,7 +1,13 @@
 #!/bin/bash
 version='0.3.1' # -- [main OFF/major ON/minor ON]
 OPENCV_VERSION='4.5.0'
-DK_EXT_PREFIX=/usr/local/dklaxz/dklaxz-extra
+
+DK_PREFIX=/usr/local/dklaxz
+DK_EXT_PREFIX=$DK_PREFIX/dklaxz-extra
+DKTMP_PREFIX=/tmp/dklaxz
+DK_REPO=https://github.com/minlaxz/ml-in-docker.git
+
+
 
 laxzbuild() {
     compute_cab=$1
@@ -98,13 +104,13 @@ else
         --build) if [[ $ndVar == "" ]]; then
             echo "This need GPU(s)'(!s) compute capability number. eg:7.6"
             echo "more info > https://developer.nvidia.com/cuda-gpus"
-            else laxzbuild $ndVar
+            else bash $DK_EXT_PREFIX/build_opencv $ndVar
             fi
             ;;
         --cvhelp) bash -c $DK_EXT_PREFIX/howto_opencv ;;
         --version) printf "version : ${version} Main:Major:Minor\n" ;;
-        --update) bash -c $DK_EXT_PREFIX/check_dklaxz ;;
-        --update-rc) bash -c $DK_EXT_PREFIX/check_rc ;;
+        --update) bash $DK_EXT_PREFIX/check_dklaxz $DK_PREFIX $DKTMP_PREFIX $DK_REPO ;;
+        --update-rc) bash -c $DK_EXT_PREFIX/check_rc ;; # for some weird cases
         *) printf "[not an option $stVar] dklaxz --help for usage.\n" ;;
     esac
 fi
