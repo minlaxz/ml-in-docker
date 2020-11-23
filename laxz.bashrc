@@ -10,7 +10,7 @@ alias ls="ls --color=auto"
 DK_PREFIX=/usr/local/dklaxz
 DKTMP_PREFIX=/tmp/dklaxz
 
-echo -e "\e[1;31m"
+echo -e "\e[1;36m"
 cat<<ML
  __  __  ____  _  _  __      __    _  _  ____ 
 (  \/  )(_  _)( \( )(  )    /__\  ( \/ )(_   )
@@ -18,6 +18,9 @@ cat<<ML
 (_/\/\_)(____)(_)\_)(____)(__)(__)(_/\_)(____) ___ minlaxz
 
 ML
+echo -e "\e[m"
+########################################################
+
 echo -e "\e[0;33m"
 if [[ $EUID -eq 0 ]]; then
   cat <<WARN
@@ -34,25 +37,29 @@ You are running this container as user with ID $(id -u) and group $(id -g),
 which should map to the ID and group for your user on the Docker host. Great!
 EXPL
 fi
-
-cd $HOME
+echo -e "\e[m"
+########################################################
 
 _check_internet(){
 wget -q --spider google.com
 if [ $? -eq 0 ]; then
 _check_dk_update
 else
+echo -e "\e[0;31m"
 cat<<EOF
 seem to be Offline ...
 ps consider manually update later => dklaxz --update
 EOF
 fi
 }
+########################################################
 
 _check_dk_update(){
-  cat<<EOF
-  dklaxz is checking for update, please wait a bit ...
+echo -e "\e[7;33m"
+cat<<EOF
+  dklaxz is checking for update, please wait a bit ...   
 EOF
+echo -e "\e[m"
 # download or update repo 
 if [[ ! -f "$DKTMP_PREFIX/dklaxz" ]]; then
 rm -rf $DKTMP_PREFIX
@@ -65,22 +72,35 @@ fi
 DKHASH=$(find $DK_PREFIX \( ! -regex '.*/\..*' \) -type f -print0   | xargs -0 sha1sum | sha256sum | awk '{print $1}')
 DKTMPHASH=$(find $DKTMP_PREFIX \( ! -regex '.*/\..*' \) -type f -print0   | xargs -0 sha1sum | sha256sum | awk '{print $1}')
 
+
 if [[ "$DKHASH" == "$DKTMPHASH" ]]; then
-echo "dklaxz up-to-date."
+echo -e "\e[1;37m"
+cat<<EOF
+dklaxz up-to-date."
+EOF
+echo -e "\e[m"
+
 else
+echo -e "\e[1;31m"
 cat<<EOF
 dklaxz update available.
 please consider running dklaxz --update
 EOF
 fi
-echo "current hash : $DKHASH"
-echo "lastest hash : $DKTMPHASH"
+
+echo -e "\e[2;32m"
+cat<<EOF
+"current hash : $DKHASH"
+"lastest hash : $DKTMPHASH"
+EOF
+echo -e "\e[m"
+
 #sha256sum -c SHA256SUMS 2>&1 | grep OK
 }
+########################################################
 
 _check_internet
-
+echo -e "\e[1;35m"
 echo "You can type 'dklaxz --help' for more."
-
 # Turn off colors
 echo -e "\e[m"
