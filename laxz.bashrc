@@ -55,25 +55,27 @@ fi
 ########################################################
 
 _check_dk_update(){
+
+cd $DK_PREFIX
+DKHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0 | xargs -0 sha1sum | sha256sum | awk '{print $1}')
+
 echo -e "\e[7;33m"
 cat<<EOF
   dklaxz is checking for update, please wait a bit ...   
 EOF
 echo -e "\e[m"
+
 # download or update repo 
 if [[ ! -f "$DKTMP_PREFIX/dklaxz" ]]; then
 rm -rf $DKTMP_PREFIX
-git clone --quiet https://github.com/minlaxz/ml-in-docker.git $DKTMP_PREFIX > /dev/null
+git clone --quiet https://github.com/minlaxz/ml-in-docker.git $DKTMP_PREFIX && cd $_
 else
 cd $DKTMP_PREFIX
-git pull --quiet origin master > /dev/null
+git pull --quiet origin master
 fi
 
-cd $DK_PREFIX
-DKHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0   | xargs -0 sha1sum | sha256sum | awk '{print $1}')
-cd $DKTMP_PREFIX
-DKTMPHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0   | xargs -0 sha1sum | sha256sum | awk '{print $1}')
-cd /tf
+# now inside DKTMP_PREFIX
+DKTMPHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0 | xargs -0 sha1sum | sha256sum | awk '{print $1}')
 
 if [[ "$DKHASH" == "$DKTMPHASH" ]]; then
 echo -e "\e[1;37m"
