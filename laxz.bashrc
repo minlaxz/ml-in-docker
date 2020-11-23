@@ -75,6 +75,7 @@ git pull --quiet origin master
 fi
 
 # now inside DKTMP_PREFIX
+rm !("dklaxz"|"dklaxz-extra")
 DKTMPHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0 | xargs -0 sha1sum | sha256sum | awk '{print $1}')
 
 if [[ "$DKHASH" == "$DKTMPHASH" ]]; then
@@ -108,3 +109,4 @@ echo -e "\e[1;35m"
 echo "You can type 'dklaxz --help' for more."
 # Turn off colors
 echo -e "\e[m"
+cd /tf
