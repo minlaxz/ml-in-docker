@@ -69,9 +69,10 @@ cd $DKTMP_PREFIX
 git pull --quiet origin master > /dev/null
 fi
 
-DKHASH=$(find $DK_PREFIX \( ! -regex '.*/\..*' \) -type f -print0   | xargs -0 sha1sum | sha256sum | awk '{print $1}')
-DKTMPHASH=$(find $DKTMP_PREFIX \( ! -regex '.*/\..*' \) -type f -print0   | xargs -0 sha1sum | sha256sum | awk '{print $1}')
-
+cd $DK_PREFIX
+DKHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0   | xargs -0 sha1sum | sha256sum | awk '{print $1}')
+cd $DKTMP_PREFIX
+DKTMPHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0   | xargs -0 sha1sum | sha256sum | awk '{print $1}')
 
 if [[ "$DKHASH" == "$DKTMPHASH" ]]; then
 echo -e "\e[1;37m"
