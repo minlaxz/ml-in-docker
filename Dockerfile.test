@@ -7,7 +7,9 @@ FROM ubuntu:${UBUNTU_VERSION}
 
 SHELL ["/bin/bash", "-c"]
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y wget git && apt-get autoremove -y
+RUN apt-get update 1>/dev/null \
+&& apt-get upgrade -y 1>/dev/null \
+&& apt-get install -y wget git 1>/dev/null
 
 COPY laxz.bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
@@ -17,3 +19,10 @@ COPY dklaxz /usr/local/dklaxz/dklaxz
 COPY dklaxz-extra /usr/local/dklaxz/dklaxz-extra/
 RUN chmod 755 /usr/local/dklaxz/dklaxz /usr/local/dklaxz/dklaxz-extra/*
 RUN ln -s /usr/local/dklaxz/dklaxz /usr/bin/dklaxz
+
+RUN mkdir -p /tf/tensorflow-tutorials && chmod -R a+rwx /tf/
+COPY ./examples-ipynb.txt /tf
+RUN mkdir /.local && chmod a+rwx /.local
+WORKDIR /tf/tensorflow-tutorials
+RUN wget -qi ../examples-ipynb.txt && apt-get autoremove -y
+WORKDIR /tf

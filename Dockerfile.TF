@@ -154,8 +154,9 @@ RUN jupyter serverextension enable --py jupyter_http_over_ws
 
 RUN mkdir -p /tf/tensorflow-tutorials && chmod -R a+rwx /tf/
 RUN mkdir /.local && chmod a+rwx /.local
+COPY ./examples-ipynb.txt /tf
 WORKDIR /tf/tensorflow-tutorials
-RUN wget -i ./examples-ipynb.txt && apt-get autoremove -y
+RUN wget -qi ../examples-ipynb.txt && apt-get autoremove -y
 WORKDIR /tf
 EXPOSE 8888
 
