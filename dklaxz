@@ -1,93 +1,11 @@
 #!/bin/bash
-version='0.3.1' # -- [main OFF/major ON/minor ON]
+version='1.1.0' # -- [main OFF/major ON/minor ON]
 OPENCV_VERSION='4.5.0'
 
 DK_PREFIX=/usr/local/dklaxz
 DK_EXT_PREFIX=$DK_PREFIX/dklaxz-extra
 DKTMP_PREFIX=/tmp/dklaxz
 DK_REPO=https://github.com/minlaxz/ml-in-docker.git
-
-
-
-laxzbuild() {
-    compute_cab=$1
-    echo -e "\e[1;37m"
-echo "installing required dependencies ... ${compute_cab} "
-    echo -e "\e[m"
-apt install -y cmake unzip pkg-config libjpeg-dev libpng-dev libtiff-dev libavcodec-dev \
-libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev libx264-dev \
-libgtk-3-dev libatlas-base-dev gfortran
-    echo -e "\e[1;37m"
-echo "Finished. "
-    echo -e "\e[m"
-
-    echo -e "\e[1;37m"
-echo "Downloading OpenCV archive ... "
-    echo -e "\e[m"
-wget -O opencv.zip https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip \
-&& unzip opencv.zip && mv opencv-${OPENCV_VERSION}/ opencv/
-    echo -e "\e[1;37m"
-echo "OpenCV Ready. "
-    echo -e "\e[m"
-
-    echo -e "\e[1;37m"
-echo "Downloading OpenCV_contrib archive ... "
-    echo -e "\e[m"
-wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip \
-&& unzip opencv_contrib.zip && mv opencv_contrib-${OPENCV_VERSION}/ opencv_contrib/
-    echo -e "\e[1;37m"
-echo "Opencv_contrib Ready. "
-    echo -e "\e[m"
-
-    echo -e "\e[7;34m"
-echo "OpenCV build started. This will take several minutes."
-    echo -e "\e[m"
-mkdir -p $HOME/opencv/build && cd $_ \
-
-while true; do
-    read -p "Build opencv? this will take some time [y/n]: " yn
-    case $yn in 
-        [Yy]*) cmakeopnev ;;
-        [Nn]*) exit ;;
-        *) echo "y or n!" ;;
-        esac
-    done
-
-cmake -D CMAKE_BUILD_TYPE=RELEASE \
--D CMAKE_INSTALL_PREFIX=/usr/local \
--D WITH_CUDA=ON \
--D WITH_CUDNN=ON \
--D OPENCV_DNN_CUDA=ON \
--D ENABLE_FAST_MATH=1 \
--D CUDA_FAST_MATH=1 \
--D WITH_CUBLAS=1 \
--D CUDA_ARCH_BIN=${compute_cab} \
--D INSTALL_PYTHON_EXAMPLES=ON \
--D INSTALL_C_EXAMPLES=OFF \
--D OPENCV_ENABLE_NONFREE=ON \
--D HAVE_opencv_python3=ON \
--D PYTHON_EXECUTABLE=$(which python) \
--D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
--D BUILD_EXAMPLES=ON .. && make -j4
-
-    echo -e "\e[7;34m"
-echo "Installation started. This will take several minutes."
-    echo -e "\e[m"
-    make install && ldconfig
-    echo -e "\e[7;34m"
-echo "Installation finished."
-    echo -e "\e[m"
-    
-    echo -e "\e[7;34m"
-echo "Cleaning"
-    echo -e "\e[m"
-    cd ../../ && rm -rf opencv opencv_contrib && rm opencv.zip opencv_contrib.zip \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -rf ~/.cache/pip
-    echo -e "\e[7;34m"
-echo "Finished."
-    echo -e "\e[m"
-}
 
 if [ $# -eq 0 ]; then
 echo -e "\e[1;31m"
@@ -101,14 +19,18 @@ else
     case "$stVar" in
         --help) bash -c $DK_EXT_PREFIX/help ;;
         --map) bash -c $DK_EXT_PREFIX/map ;;
-        --build) if [[ $ndVar == "" ]]; then
+
+        --build-cv) if [[ $ndVar == "" ]]; then
             echo "This need GPU(s)'(!s) compute capability number. eg:7.6"
             echo "more info > https://developer.nvidia.com/cuda-gpus"
             else bash $DK_EXT_PREFIX/build_opencv $ndVar
             fi
             ;;
-        --cvhelp) bash -c $DK_EXT_PREFIX/howto_opencv ;;
-        --version) printf "version : ${version} Main:Major:Minor\n" ;;
+        --help-cv) bash -c $DK_EXT_PREFIX/howto_opencv ;;
+
+        # --build-tf) if [[ ]]
+
+        --version) printf "version : ${version} Main/Build/Minor\n" ;;
         --update) bash $DK_EXT_PREFIX/check_dklaxz $DK_PREFIX $DKTMP_PREFIX $DK_REPO ;;
         --update-rc) bash -c $DK_EXT_PREFIX/check_rc ;; # for some weird cases
         *) printf "[not an option $stVar] dklaxz --help for usage.\n" ;;

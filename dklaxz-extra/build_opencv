@@ -1,0 +1,70 @@
+cc=$1
+
+echo -e "\e[1;37m"
+echo "installing required dependencies ... ${cc} "
+echo -e "\e[m"
+
+apt install -y cmake unzip pkg-config libjpeg-dev libpng-dev libtiff-dev libavcodec-dev \
+libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev libx264-dev \
+libgtk-3-dev libatlas-base-dev gfortran
+
+cd $HOME
+
+echo -e "\e[1;37m"
+echo "Downloading OpenCV archive ... "
+if [[ ! -f ./opencv.zip ]]; then
+wget -qO opencv.zip https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip \
+&& unzip -q opencv.zip && mv opencv-${OPENCV_VERSION}/ opencv/
+fi
+echo -e "\e[m"
+
+echo -e "\e[1;37m"
+echo "Downloading OpenCV_contrib archive ... "
+if [[ ! -f ./opencv_contrib.zip ]]; then
+wget -qO opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip \
+&& unzip opencv_contrib.zip && mv opencv_contrib-${OPENCV_VERSION}/ opencv_contrib/
+fi
+echo -e "\e[m"
+
+while true; do
+    read -p "Configure opencv? this will take some time [y/n]: " yn
+    case $yn in 
+        [Yy]*) cmakeopencv ;;
+        [Nn]*) exit ;;
+        *) echo "y or n!" ;;
+        esac
+    done
+
+cmakeopencv() {
+mkdir -p $HOME/opencv/build && cd $_
+
+cmake -D CMAKE_BUILD_TYPE=RELEASE \
+-D CMAKE_INSTALL_PREFIX=/usr/local \
+-D WITH_CUDA=ON \
+-D WITH_CUDNN=ON \
+-D OPENCV_DNN_CUDA=ON \
+-D ENABLE_FAST_MATH=1 \
+-D CUDA_FAST_MATH=1 \
+-D WITH_CUBLAS=1 \
+-D CUDA_ARCH_BIN=${cc} \
+-D INSTALL_PYTHON_EXAMPLES=ON \
+-D INSTALL_C_EXAMPLES=OFF \
+-D OPENCV_ENABLE_NONFREE=ON \
+-D HAVE_opencv_python3=ON \
+-D PYTHON_EXECUTABLE=$(which python) \
+-D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
+-D BUILD_EXAMPLES=ON .. && make -j4 && make install && ldconfig
+}
+
+echo -e "\e[7;34m"
+echo "Finished."
+echo -e "\e[m"
+    
+echo -e "\e[7;34m"
+echo "Cleaning"
+echo -e "\e[m"
+cd $HOME && rm -rf opencv opencv_contrib opencv.zip opencv_contrib.zip \
+&& rm -rf /var/lib/apt/lists/* && rm -rf ~/.cache/pip
+echo -e "\e[7;34m"
+echo "Finished. dklaxz --help-cv for more."
+echo -e "\e[m"
