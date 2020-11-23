@@ -23,7 +23,7 @@ else
         --build-cv) if [[ $ndVar == "" ]]; then
             echo "This need GPU(s)'(!s) compute capability number. eg:7.6"
             echo "more info > https://developer.nvidia.com/cuda-gpus"
-            else bash $DK_EXT_PREFIX/build_opencv $ndVar
+            else bash $DK_EXT_PREFIX/build_opencv $OPENCV_VERSION $ndVar
             fi
             ;;
         --help-cv) bash -c $DK_EXT_PREFIX/howto_opencv ;;
