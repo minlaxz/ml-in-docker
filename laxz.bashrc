@@ -73,6 +73,7 @@ cd $DK_PREFIX
 DKHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0   | xargs -0 sha1sum | sha256sum | awk '{print $1}')
 cd $DKTMP_PREFIX
 DKTMPHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0   | xargs -0 sha1sum | sha256sum | awk '{print $1}')
+cd /tf
 
 if [[ "$DKHASH" == "$DKTMPHASH" ]]; then
 echo -e "\e[1;37m"
