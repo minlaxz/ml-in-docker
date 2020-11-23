@@ -66,16 +66,19 @@ EOF
 echo -e "\e[m"
 
 # download or update repo 
-if [[ ! -f "$DKTMP_PREFIX/dklaxz" ]]; then
-rm -rf $DKTMP_PREFIX
-git clone --quiet https://github.com/minlaxz/ml-in-docker.git $DKTMP_PREFIX && cd $_
-else
-cd $DKTMP_PREFIX
-git pull --quiet origin master
-fi
+# if [[ ! -f "$DKTMP_PREFIX/dklaxz" ]]; then
+# rm -rf $DKTMP_PREFIX || true
+# git clone --quiet https://github.com/minlaxz/ml-in-docker.git $DKTMP_PREFIX && cd $_
+# else
+# cd $DKTMP_PREFIX
+# git pull --quiet origin master
+# fi
 
+rm -rf $DKTMP_PREFIX || true
+git clone --quiet https://github.com/minlaxz/ml-in-docker.git $DKTMP_PREFIX && cd $_
 # now inside DKTMP_PREFIX
-find . -type f -or -type d -not -name 'dklaxz*' -delete
+rm -rf .git Dockerfile.* LICENSE README.md deprecated examples-ipynb.txt laxz.bashrc .gitignore
+# find . -type f -or -type d -not -name 'dklaxz*' -delete
 DKTMPHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0 | xargs -0 sha1sum | sha256sum | awk '{print $1}')
 
 if [[ "$DKHASH" == "$DKTMPHASH" ]]; then
