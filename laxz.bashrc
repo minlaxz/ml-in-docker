@@ -75,7 +75,7 @@ git pull --quiet origin master
 fi
 
 # now inside DKTMP_PREFIX
-find . -type f -not -name 'dklaxz*' -delete
+find . -type f -or -type d -not -name 'dklaxz*' -delete
 DKTMPHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0 | xargs -0 sha1sum | sha256sum | awk '{print $1}')
 
 if [[ "$DKHASH" == "$DKTMPHASH" ]]; then
