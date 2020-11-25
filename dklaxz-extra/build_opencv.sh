@@ -2,7 +2,7 @@ OPENCV_VERSION=$1
 cc=$2
 
 echo -e "\e[1;37m"
-echo "installing required dependencies ... ${cc} "
+echo "installing required dependencies ... compute capability: ${cc} "
 echo -e "\e[m"
 
 apt install -y libjpeg-dev libpng-dev libtiff-dev libavcodec-dev \
@@ -19,33 +19,21 @@ cd $HOME
 
 echo -e "\e[1;37m"
 if [[ ! -d ./opencv ]]; then
-    if [[ ! -f ./opencv.zip ]]; then
-        echo "Downloading OpenCV archive ... "
-        wget -O ./opencv.zip https://github.com/opencv/opencv/archive/master.zip
-    fi
-    echo "./opencv.zip - found. extracting ... "
-    unzip -q ./opencv.zip && mv ./opencv-master/ ./opencv/ 
-    echo "clean up."
-    rm -f ./opencv.zip
-else
-    echo "./opencv dir - found > download skipping."
+    echo "Downloading OpenCV archive ... "
+    test ! -f ./opencv.zip && wget -O ./opencv.zip https://github.com/opencv/opencv/archive/master.zip || true
+    echo "./opencv.zip extracting ... "
+    unzip -q ./opencv.zip && mv ./opencv-master/ ./opencv/ && rm -f ./opencv.zip
+fi
+
+if [[ ! -d ./opencv_contrib ]]; then
+    echo "Downloading OpenCV archive ... "
+    test -f ./opencv_contrib.zip && wget -O ./opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/master.zip || true
+    echo "./opencv_contrib.zip extracting ... "
+    unzip -q ./opencv_contrib.zip && mv ./opencv_contrib-master/ ./opencv_contrib/ && rm -f ./opencv_contrib.zip
 fi
 echo -e "\e[m"
 
-echo -e "\e[1;37m"
-if [[ ! -d ./opencv ]]; then
-    if [[ ! -f ./opencv.zip ]]; then
-        echo "Downloading OpenCV archive ... "
-        wget -O ./opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/master.zip
-    fi
-    echo "./opencv_contrib.zip - found. extracting ... "
-    unzip -q ./opencv_contrib.zip && mv ./opencv_contrib-master/ ./opencv_contrib/ 
-    echo "clean up."
-    rm -f ./opencv_contrib.zip
-else
-    echo "./opencv_contrib dir - found > download skipping."
-fi
-echo -e "\e[m"
+mkdir -p $HOME/opencv/build && cd $_
 
 makeopencv() {
     th_=$(lscpu | grep "^CPU(" | awk '{print $2}')
@@ -58,9 +46,7 @@ EOF
 }
 
 cmakeopencv() {
-
-mkdir -p $HOME/opencv/build && cd $_
-
+th_=$(lscpu | grep "^CPU(" | awk '{print $2}')
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
 -D CMAKE_INSTALL_PREFIX=/usr/local \
 -D WITH_CUDA=ON \
@@ -76,29 +62,60 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
 -D HAVE_opencv_python3=ON \
 -D PYTHON_EXECUTABLE=$(which python) \
 -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
--D BUILD_EXAMPLES=ON .. \
-&& read -p "Build opencv? [y/n]: " yn
-case $yn in
-    [yY]*) makeopencv ;;
-    *) echo "exiting." && exit ;; 
+-D BUILD_EXAMPLES=ON ..
+
+# && read -p "Build opencv? [y/n]: " yn
+# case $yn in
+#     [yY]*) makeopencv ;;
+#     *) echo "exiting." && exit ;; 
+
 }
 
 
 read -p "Configure opencv? [y/n]: " yn
 case $yn in 
     [Yy]*) cmakeopencv ;;
-    *) echo "exiting." && exit ;;
+    *) cat<<EOF
+you can manually configure opencv,
+cmake -D CMAKE_BUILD_TYPE=RELEASE \
+-D CMAKE_INSTALL_PREFIX=/usr/local \
+-D WITH_CUDA=ON \
+-D WITH_CUDNN=ON \
+-D OPENCV_DNN_CUDA=ON \
+-D ENABLE_FAST_MATH=1 \
+-D CUDA_FAST_MATH=1 \
+-D WITH_CUBLAS=1 \
+-D CUDA_ARCH_BIN=${cc} #your GPU compute capability\
+-D INSTALL_PYTHON_EXAMPLES=ON \
+-D INSTALL_C_EXAMPLES=OFF \
+-D OPENCV_ENABLE_NONFREE=ON \
+-D HAVE_opencv_python3=ON \
+-D PYTHON_EXECUTABLE=$(which python) \
+-D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
+-D BUILD_EXAMPLES=ON ..
+EOF && exit ;;
 esac
 
+cat<<EOF
+TLDR;
+make -j${th_} && make install && ldconfig
+
+A Long Story.
+I don't want to build software right now,
+so that you can check what lib or libs are missing.
+make sure your 
+'make -j'
+is lower than or equal to your cpu threads.
+your pc total threads : $th_
+
+type to clean up your docker AFTER INSTALLED opencv
+'rm -rf $HOME/opencv $HOME/opencv_contrib /var/lib/apt/lists/* ~/.cache/pip'
+make sure don't forget to commit your opencv installed container.
+'docker commit CONTAINER_ID_OR_NAME REPO/IMAGE_NAME:TAG'
+for example :
+'docker commit -m "commit message" 000000000 minlaxz/ml-env:opencv_installed'
+EOF
 
 echo -e "\e[7;34m"
-echo "Finished."
-echo -e "\e[m"
-    
-echo -e "\e[7;34m"
-echo "Cleaning"
-echo -e "\e[m"
-rm -rf $HOME/opencv $HOME/opencv_contrib /var/lib/apt/lists/* ~/.cache/pip
-echo -e "\e[7;34m"
-echo "Finished. dklaxz --help-cv for more on cv."
+echo "Finished. dklaxz --help-cv for more on opencv"
 echo -e "\e[m"
