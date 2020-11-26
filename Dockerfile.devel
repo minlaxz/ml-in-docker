@@ -107,11 +107,11 @@ RUN mkdir /bazel && \
 COPY laxz.bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
 
-RUN mkdir -p /usr/local/dklaxz/dklaxz-extra/
-COPY dklaxz.sh /usr/local/dklaxz/dklaxz.sh
-COPY dklaxz-extra /usr/local/dklaxz/dklaxz-extra/
-RUN chmod 755 /usr/local/dklaxz/dklaxz.sh /usr/local/dklaxz/dklaxz-extra/*
-RUN ln -s /usr/local/dklaxz/dklaxz.sh /usr/bin/dklaxz
+# RUN mkdir -p /usr/local/dklaxz/dklaxz-extra/
+# COPY dklaxz.sh /usr/local/dklaxz/dklaxz.sh
+# COPY dklaxz-extra /usr/local/dklaxz/dklaxz-extra/
+# RUN chmod 755 /usr/local/dklaxz/dklaxz.sh /usr/local/dklaxz/dklaxz-extra/*
+# RUN ln -s /usr/local/dklaxz/dklaxz.sh /usr/bin/dklaxz
 
 # Pin ipykernel and nbformat; see https://github.com/ipython/ipykernel/issues/422
 RUN python3 -m pip install --no-cache-dir jupyter_http_over_ws ipykernel==5.1.1 nbformat==4.4.0
