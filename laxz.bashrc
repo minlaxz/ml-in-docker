@@ -8,7 +8,6 @@ alias grep="grep --color=auto"
 alias ls="ls --color=auto"
 
 DK_PREFIX=/usr/local/dklaxz
-DKTMP_PREFIX=/tmp/dklaxz
 DK_REPO=https://github.com/minlaxz/ml-in-docker.git
 
 echo -e "\e[1;36m"
@@ -35,7 +34,8 @@ WARN
 else
   cat <<EXPL
 You are running this container as user with ID $(id -u) and group $(id -g),
-which should map to the ID and group for your user on the Docker host. Great!
+which should map to the ID and group for your user on the Docker host.
+Great!
 EXPL
 fi
 echo -e "\e[m"
@@ -44,73 +44,40 @@ echo -e "\e[m"
 _check_internet(){
 wget -q --spider google.com
 if [ $? -eq 0 ]; then
-_check_dk_update
+
+echo -e "\e[7;33m"
+echo "installing dklaxz, please wait a bit ... "
+echo -e "\e[m"
+
+_install_dklaxz
+
 else
 echo -e "\e[0;31m"
-cat<<EOF
-seem to be Offline ...
-ps consider manually update later => dklaxz --update
-EOF
+echo "=> dklaxz can't be installed for now. seem to be OFFLINE ..."
+echo -e "\e[m"
+
 fi
+
 }
 ########################################################
 
-_check_dk_update(){
-
-cd $DK_PREFIX
-DKHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0 | xargs -0 sha1sum | sort -h | sha256sum | awk '{print $1}')
-
-echo -e "\e[7;33m"
-cat<<EOF
-  dklaxz is checking for update, please wait a bit ...   
-EOF
-echo -e "\e[m"
-
-# download or update repo 
-# if [[ ! -f "$DKTMP_PREFIX/dklaxz" ]]; then
-# rm -rf $DKTMP_PREFIX || true
-# git clone --quiet https://github.com/minlaxz/ml-in-docker.git $DKTMP_PREFIX && cd $_
-# else
-# cd $DKTMP_PREFIX
-# git pull --quiet origin master
-# fi
-
-rm -rf $DKTMP_PREFIX || true
-git clone --quiet $DK_REPO $DKTMP_PREFIX && cd $_
-# now inside DKTMP_PREFIX
-rm -rf .git Dockerfile.* LICENSE README.md deprecated examples-ipynb.txt laxz.bashrc .gitignore
-# find . -type f -or -type d -not -name 'dklaxz*' -delete
-DKTMPHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0 | xargs -0 sha1sum | sort -h | sha256sum | awk '{print $1}')
-
-if [[ "$DKHASH" == "$DKTMPHASH" ]]; then
-echo -e "\e[1;37m"
-cat<<EOF
-dklaxz up-to-date."
-EOF
-echo -e "\e[m"
-
-else
-echo -e "\e[1;31m"
-cat<<EOF
-dklaxz update available.
-please consider running dklaxz --update
-EOF
-fi
-
-echo -e "\e[2;32m"
-cat<<EOF
-"current hash : $DKHASH"
-"lastest hash : $DKTMPHASH"
-EOF
-echo -e "\e[m"
-
-#sha256sum -c SHA256SUMS 2>&1 | grep OK
+_install_dklaxz(){
+  git clone --quiet $DK_REPO $DK_PREFIX && cd $_
+  # DKTMPHASH=$(cat ./current_hash 2> /dev/null)
+  # rm -rf .git Dockerfile.* LICENSE README.md deprecated examples-ipynb.txt laxz.bashrc .gitignore current_hash
+  # DKHASH=$(find . \( ! -regex '.*/\..*' \) -type f -print0 | xargs -0 sha1sum | sort -h | sha256sum | awk '{print $1}')
+  # echo "Defined hash : ${DKTMPHASH}"
+  DKHASH=$(find . -maxdepth 2 -name "*.sh" -print0 | xargs -0 sha1sum | sort -h | sha256sum | awk '{print $1}')
+  echo "dklaxz's current hash : ${DKHASH}"
+  ln -s $DK_PREFIX/dklaxz.sh /usr/bin/dklaxz
+  chmod 755 /usr/bin/dklaxz
 }
+
 ########################################################
 
 _check_internet
+
 echo -e "\e[1;35m"
 echo "You can type 'dklaxz --help' for more."
-# Turn off colors
 echo -e "\e[m"
 cd /tf
