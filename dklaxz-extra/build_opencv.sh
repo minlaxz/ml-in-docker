@@ -3,6 +3,7 @@ cc=$2
 
 echo -e "\e[1;37m"
 echo "installing required dependencies ... compute capability: ${cc} "
+sleep 5
 echo -e "\e[m"
 
 apt install -y libjpeg-dev libpng-dev libtiff-dev libavcodec-dev \
@@ -75,25 +76,7 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
 read -p "Configure opencv? [y/n]: " yn
 case $yn in 
     [Yy]*) cmakeopencv ;;
-    *) cat<<EOF
-you can manually configure opencv,
-cmake -D CMAKE_BUILD_TYPE=RELEASE \
--D CMAKE_INSTALL_PREFIX=/usr/local \
--D WITH_CUDA=ON \
--D WITH_CUDNN=ON \
--D OPENCV_DNN_CUDA=ON \
--D ENABLE_FAST_MATH=1 \
--D CUDA_FAST_MATH=1 \
--D WITH_CUBLAS=1 \
--D CUDA_ARCH_BIN=${cc} #your GPU compute capability\
--D INSTALL_PYTHON_EXAMPLES=ON \
--D INSTALL_C_EXAMPLES=OFF \
--D OPENCV_ENABLE_NONFREE=ON \
--D HAVE_opencv_python3=ON \
--D PYTHON_EXECUTABLE=$(which python) \
--D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
--D BUILD_EXAMPLES=ON ..
-EOF ;;
+    *) echo "build manually. exiting." ;;
 esac
 
 cat<<EOF
