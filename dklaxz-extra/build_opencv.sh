@@ -27,7 +27,7 @@ fi
 
 if [[ ! -d ./opencv_contrib ]]; then
     echo "Downloading OpenCV archive ... "
-    test -f ./opencv_contrib.zip && wget -O ./opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/master.zip || true
+    test ! -f ./opencv_contrib.zip && wget -O ./opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/master.zip || true
     echo "./opencv_contrib.zip extracting ... "
     unzip -q ./opencv_contrib.zip && mv ./opencv_contrib-master/ ./opencv_contrib/ && rm -f ./opencv_contrib.zip
 fi
