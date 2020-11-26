@@ -96,7 +96,7 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
 EOF && exit ;;
 esac
 
-cat<<EOF
+echo "
 TLDR;
 make -j${th_} && make install && ldconfig
 
@@ -114,7 +114,7 @@ make sure don't forget to commit your opencv installed container.
 'docker commit CONTAINER_ID_OR_NAME REPO/IMAGE_NAME:TAG'
 for example :
 'docker commit -m "commit message" 000000000 minlaxz/ml-env:opencv_installed'
-EOF
+"
 
 echo -e "\e[7;34m"
 echo "Finished. dklaxz --help-cv for more on opencv"
