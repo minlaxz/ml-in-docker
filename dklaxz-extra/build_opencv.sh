@@ -81,7 +81,7 @@ esac
 
 cat<<EOF
 TLDR;
-make -j${th_} && make install && ldconfig
+cd $HOME/opencv/build && make -j${th_} && make install && ldconfig
 
 A Long Story.
 I don't want to build software right now,
