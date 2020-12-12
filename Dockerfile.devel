@@ -92,7 +92,7 @@ RUN ln -s $(which python3) /usr/local/bin/python
 RUN python3 -m pip --no-cache-dir install \
     Pillow h5py keras_preprocessing matplotlib \
     mock 'numpy<1.19.0' scipy sklearn pandas \
-    future portpicker enum34 jupyterlab matplotlib logxs
+    future portpicker enum34 matplotlib logxs jupyterthemes
 
 # Install bazel
 ARG BAZEL_VERSION=3.1.0
@@ -126,5 +126,6 @@ WORKDIR /tf
 EXPOSE 8888
 
 RUN python3 -m ipykernel.kernelspec
+RUN jt -t onedork -kl -f roboto -fs 10 -tf merriserif -tfs 115 -nf ptsans -nfs 10 -cellw 80% -cursw 2
 
-CMD ["bash", "-c", "source /etc/bash.bashrc && jupyter lab --notebook-dir=/tf --ip 0.0.0.0 --no-browser --allow-root"]
+CMD ["bash", "-c", "source /etc/bash.bashrc && jupyter notebook --notebook-dir=/tf --ip 0.0.0.0 --no-browser --allow-root"]
