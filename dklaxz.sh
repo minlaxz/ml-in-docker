@@ -1,6 +1,6 @@
 #!/bin/bash
-version='1.2.0' # -- [main OFF/major ON/minor ON]
-OPENCV_VERSION='4.5.0'
+version='1.3.0' # -- [main OFF/major ON/minor ON]
+OPENCV_VERSION='4.5.1'
 
 DK_PREFIX=/usr/local/dklaxz
 DK_EXT_PREFIX=$DK_PREFIX/dklaxz-extra
@@ -27,6 +27,7 @@ else
             fi
             ;;
         --help-cv) bash $DK_EXT_PREFIX/howto_opencv.sh ;;
+        --link-cv) bash $DK_EXT_PREFIX/link-cv.sh ;;
 
         # --build-tf) if [[ ]]
 
