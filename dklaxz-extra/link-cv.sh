@@ -16,5 +16,5 @@ example:
 For Error:
     numpy.core.multiarray failed to import
 
-    pip install numpy #( in your env )
+    pip install numpy --upgrade --no-cache-dir #( in your env )
 EOF
