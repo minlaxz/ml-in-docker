@@ -34,7 +34,7 @@ if [[ ! -d ./opencv_contrib ]]; then
 fi
 echo -e "\e[m"
 
-mkdir -p $HOME/opencv/build && cd $_
+mv opencv-4.5.1 opencv && mv opencv_contrib-4.5.1 opencv_contrib && mkdir -p $HOME/opencv/build && cd $_
 
 makeopencv() {
     th_=$(lscpu | grep "^CPU(" | awk '{print $2}')
