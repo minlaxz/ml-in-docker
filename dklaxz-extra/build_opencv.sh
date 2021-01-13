@@ -20,21 +20,21 @@ cd $HOME
 
 echo -e "\e[1;37m"
 if [[ ! -d ./opencv ]]; then
-    echo "Downloading OpenCV archive ... "
-    test ! -f ./opencv.zip && wget -O ./opencv.zip https://github.com/opencv/opencv/archive/master.zip || true
-    echo "./opencv.zip extracting ... "
-    unzip -q ./opencv.zip && mv ./opencv-master/ ./opencv/ && rm -f ./opencv.zip
+    echo "Downloading opencv archive ... "
+    test ! -f ./opencv-${OPENCV_VERSION}.zip && wget -O ./opencv-${OPENCV_VERSION}.zip https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip || true
+    echo "./opencv-${OPENCV_VERSION}.zip extracting ... "
+    unzip -q ./opencv-${OPENCV_VERSION}.zip && mv ./opencv-${OPENCV_VERSION}/ ./opencv/
 fi
 
 if [[ ! -d ./opencv_contrib ]]; then
-    echo "Downloading OpenCV archive ... "
-    test ! -f ./opencv_contrib.zip && wget -O ./opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/master.zip || true
-    echo "./opencv_contrib.zip extracting ... "
-    unzip -q ./opencv_contrib.zip && mv ./opencv_contrib-master/ ./opencv_contrib/ && rm -f ./opencv_contrib.zip
+    echo "Downloading opencv_contrib archive ... "
+    test ! -f ./opencv_contrib-${OPENCV_VERSION}.zip && wget -O ./opencv_contrib-${OPENCV_VERSION}.zip https://github.com/opencv/opencv_contrib/archive/4.4.0.zip || true
+    echo "./opencv_contrib-${OPENCV_VERSION}.zip extracting ... "
+    unzip -q ./opencv_contrib-${OPENCV_VERSION}.zip && mv ./opencv_contrib-${OPENCV_VERSION}/ ./opencv_contrib/ && rm -f ./*.zip
 fi
 echo -e "\e[m"
 
-mv opencv-4.5.1 opencv && mv opencv_contrib-4.5.1 opencv_contrib && mkdir -p $HOME/opencv/build && cd $_
+mkdir -p $HOME/opencv/build && cd $_
 
 makeopencv() {
     th_=$(lscpu | grep "^CPU(" | awk '{print $2}')

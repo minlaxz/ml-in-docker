@@ -1,6 +1,6 @@
 #!/bin/bash
-version='1.3.0' # -- [main OFF/major ON/minor ON]
-OPENCV_VERSION='4.5.1'
+version='1.3.1' # -- [main OFF/major ON/minor ON]
+OPENCV_VERSION='4.4.0'
 
 DK_PREFIX=/usr/local/dklaxz
 DK_EXT_PREFIX=$DK_PREFIX/dklaxz-extra
