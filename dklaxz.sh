@@ -1,5 +1,5 @@
 #!/bin/bash
-version='1.1.0' # -- [main OFF/major ON/minor ON]
+version='1.2.0' # -- [main OFF/major ON/minor ON]
 OPENCV_VERSION='4.5.0'
 
 DK_PREFIX=/usr/local/dklaxz
