@@ -9,7 +9,7 @@ echo -e "\e[m"
 apt install -y libjpeg-dev libpng-dev libtiff-dev libavcodec-dev \
 libavformat-dev libswscale-dev libavutil-dev libv4l-dev libxvidcore-dev libx264-dev \
 libgtk-3-dev libatlas-base-dev gfortran libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
-libfreetype6-dev libtesseract-dev
+libfreetype6-dev libtesseract-dev libopencv-dev
 
 # libdc1394-22-dev
 #  high level programming interface for IEEE 1394 digital cameras - development
